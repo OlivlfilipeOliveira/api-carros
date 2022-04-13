@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import br.edu.ufal.estudo.carros.domain.dto.CarroDTO;
+import lombok.RequiredArgsConstructor;
 
 @Service
 public class CarroService {
 
-	@Autowired
+	@Autowired(required = true)
 	private CarroRepository repository;
 	
 	public List<CarroDTO> getCarros(){	
