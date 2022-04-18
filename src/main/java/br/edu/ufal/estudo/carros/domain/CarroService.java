@@ -1,15 +1,14 @@
 package br.edu.ufal.estudo.carros.domain;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import br.edu.ufal.estudo.carros.api.exception.ObjectNotFoundException;
 import br.edu.ufal.estudo.carros.domain.dto.CarroDTO;
-import lombok.RequiredArgsConstructor;
 
 @Service
 public class CarroService {
@@ -21,8 +20,8 @@ public class CarroService {
 		return repository.findAll().stream().map(c -> CarroDTO.create(c)).collect(Collectors.toList());
 	}
 	
-	public Optional<CarroDTO> getById(Long id) {
-		return repository.findById(id).map(c -> CarroDTO.create(c));
+	public CarroDTO getById(Long id) {
+		return repository.findById(id).map(c -> CarroDTO.create(c)).orElseThrow(() -> new ObjectNotFoundException("Carro não encontrado!"));
 	}
 	
 	public List<CarroDTO> getByTipo(String tipo){
@@ -56,13 +55,7 @@ public class CarroService {
 		}
 	}
 
-	public boolean delete(Long id) {
-		
-		if(getById(id).isPresent()) {
-			repository.deleteById(id);
-			return true;
-		}else {
-			return false;
-		}
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

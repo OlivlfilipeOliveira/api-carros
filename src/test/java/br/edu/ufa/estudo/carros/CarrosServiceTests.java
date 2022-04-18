@@ -1,12 +1,11 @@
 package br.edu.ufa.estudo.carros;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.edu.ufal.estudo.carros.CarrosApplication;
+import br.edu.ufal.estudo.carros.api.exception.ObjectNotFoundException;
 import br.edu.ufal.estudo.carros.domain.Carro;
 import br.edu.ufal.estudo.carros.domain.CarroService;
 import br.edu.ufal.estudo.carros.domain.dto.CarroDTO;
@@ -40,18 +40,22 @@ class CarrosServiceTests {
 		Long id = c.getId();
 		assertNotNull(id);
 		
-		Optional<CarroDTO> op = this.carroService.getById(c.getId());
+		CarroDTO op = this.carroService.getById(c.getId());
 		
-		assertTrue(op.isPresent());
+		assertNotNull(op);
 		
-		c = op.get();
 		
 		assertEquals("Teste", c.getNome());
 		assertEquals("Esportivo", c.getTipo());
 		
 		this.carroService.delete(c.getId());
 		
-		assertFalse(this.carroService.getById(c.getId()).isPresent());
+		try {
+			assertNull(this.carroService.getById(c.getId()));
+			fail("O carro não foi excluído!");
+		}catch (ObjectNotFoundException e) {
+			// TODO: handle exception
+		}
 	}
 	
 	@Test
@@ -73,13 +77,12 @@ class CarrosServiceTests {
 	
 	@Test
 	public void testGet() {
-		Optional<CarroDTO> op = carroService.getById(1L);
+		CarroDTO op = carroService.getById(1L);
 		
-		assertTrue(op.isPresent());
+		assertNotNull(op);
 		
-		CarroDTO c = op.get();
 		
-		assertEquals("Tucker 1948", c.getNome());
+		assertEquals("Tucker 1948", op.getNome());
 	}
 
 }
