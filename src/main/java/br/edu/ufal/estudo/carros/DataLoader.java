@@ -4,10 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import br.edu.ufal.estudo.carros.domain.Carro;
 import br.edu.ufal.estudo.carros.domain.CarroRepository;
+import br.edu.ufal.estudo.carros.domain.User;
+import br.edu.ufal.estudo.carros.domain.UserRepository;
 
 @Component
 public class DataLoader implements CommandLineRunner{
@@ -18,15 +21,33 @@ public class DataLoader implements CommandLineRunner{
 	@Autowired
 	private CarroRepository repository;
 	
+	@Autowired
+	private UserRepository userRespository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		logger.info("Carregando dados de teste na inicialização...");
 
 		this.loadCars();
-
+		this.loadUsers();
+		
 		logger.info("Carros carregados: {}", repository.count());
-
+		logger.info("Usuários carregados: {}", userRespository.count());
 		logger.info("Finalizando teste na inicialização...");
+	}
+	
+	private void loadUsers() {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		String senha1 = encoder.encode("admin");
+		User user1 = new User("Admin", "admin", "admin@gmail.com", senha1);
+		
+		String senha2 = encoder.encode("teste123");
+		User user2 = new User("Filipe Oliveira", "fOliveira", "filipeo444@gmail.com", senha2);
+		
+		userRespository.save(user1);		
+		userRespository.save(user2);
+		
 	}
 	
 	private void loadCars() {
