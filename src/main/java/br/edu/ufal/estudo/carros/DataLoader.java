@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import br.edu.ufal.estudo.carros.domain.Carro;
 import br.edu.ufal.estudo.carros.domain.CarroRepository;
+import br.edu.ufal.estudo.carros.domain.Role;
+import br.edu.ufal.estudo.carros.domain.RoleRepository;
 import br.edu.ufal.estudo.carros.domain.User;
 import br.edu.ufal.estudo.carros.domain.UserRepository;
 
@@ -24,16 +26,29 @@ public class DataLoader implements CommandLineRunner{
 	@Autowired
 	private UserRepository userRespository;
 	
+	@Autowired
+	private RoleRepository roleRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		logger.info("Carregando dados de teste na inicialização...");
 
 		this.loadCars();
-		this.loadUsers();
+		//this.loadUsers();
+		//this.loadRoles();
 		
 		logger.info("Carros carregados: {}", repository.count());
 		logger.info("Usuários carregados: {}", userRespository.count());
+		logger.info("Roles carregadas: {}", roleRepository.count());
 		logger.info("Finalizando teste na inicialização...");
+	}
+	
+	private void loadRoles() {
+		Role r1 = new Role("ROLE_USER");
+		Role r2 = new Role("ROLE_ADMIN");
+		
+		roleRepository.save(r1);
+		roleRepository.save(r2);
 	}
 	
 	private void loadUsers() {
