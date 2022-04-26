@@ -7,3 +7,4 @@ insert into user(id,name,email,login,password) values (3,'User','user@gmail.com'
 
 insert into user_roles(user_id,role_id) values(1, 1);
 insert into user_roles(user_id,role_id) values(2, 2);
+insert into user_roles(user_id,role_id) values(3, 1);
